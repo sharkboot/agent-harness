@@ -1,0 +1,5 @@
+# Archify 中间产物（交付 HTML/JSON 已归档到 docs/architecture/）
+.archify/
+# 本地临时
+.DS_Store
+*.log
