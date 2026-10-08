@@ -2,7 +2,7 @@
 
 use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Clone, Error)]
 pub enum ToolError {
     #[error("工具执行超时: {tool_name}")]
     Timeout { tool_name: String },

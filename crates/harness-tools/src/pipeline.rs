@@ -163,13 +163,15 @@ impl ToolPipeline {
         let safe_results: Vec<_> = if safe_calls.is_empty() {
             vec![]
         } else {
-            let handles: Vec<_> = safe_calls
-                .iter()
+            // 克隆 safe_calls 以避免生命周期问题
+            let safe_calls_owned: Vec<_> = safe_calls.iter().cloned().collect();
+            let handles: Vec<_> = safe_calls_owned
+                .into_iter()
                 .map(|tc| {
                     let pipeline = self.clone();
                     let signal = signal.clone();
                     tokio::spawn(async move {
-                        pipeline.execute_tool_call(tc, &signal).await
+                        pipeline.execute_tool_call(&tc, &signal).await
                             .map_err(|e| e.clone())
                     })
                 })
