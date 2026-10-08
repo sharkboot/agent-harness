@@ -322,6 +322,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "harness-context"
+version = "0.1.0"
+dependencies = [
+ "harness-event",
+ "harness-session",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "harness-event"
 version = "0.1.0"
 dependencies = [
@@ -334,6 +348,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "harness-mcp"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "harness-event",
+ "harness-tools",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "harness-model"
 version = "0.1.0"
 dependencies = [
@@ -341,6 +369,21 @@ dependencies = [
  "futures",
  "harness-event",
  "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
+name = "harness-permission"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "harness-event",
+ "harness-tools",
  "serde",
  "serde_json",
  "thiserror",
@@ -371,6 +414,21 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "harness-event",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
+name = "harness-subagent"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "harness-event",
+ "harness-session",
  "serde",
  "serde_json",
  "thiserror",

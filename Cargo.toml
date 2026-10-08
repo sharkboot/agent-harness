@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/harness-event", "crates/harness-session", "crates/harness-runtime", "crates/harness-tools", "crates/harness-model"]
+members = ["crates/harness-event", "crates/harness-session", "crates/harness-runtime", "crates/harness-tools", "crates/harness-model", "crates/harness-context", "crates/harness-subagent", "crates/harness-permission", "crates/harness-mcp"]
 resolver = "2"
 
 [workspace.package]
@@ -15,6 +15,10 @@ harness-session = { path = "crates/harness-session" }
 harness-runtime = { path = "crates/harness-runtime" }
 harness-tools   = { path = "crates/harness-tools" }
 harness-model   = { path = "crates/harness-model" }
+harness-context = { path = "crates/harness-context" }
+harness-subagent = { path = "crates/harness-subagent" }
+harness-permission = { path = "crates/harness-permission" }
+harness-mcp     = { path = "crates/harness-mcp" }
 
 serde       = { version = "1", features = ["derive"] }
 serde_json  = "1"
