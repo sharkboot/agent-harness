@@ -68,14 +68,14 @@ impl StreamingBlock {
     pub fn try_parse_arguments(&mut self) -> Result<(), ModelError> {
         if !self.arguments_json.is_empty() {
             let parsed: serde_json::Value = serde_json::from_str(&self.arguments_json)
-                .map_err(|e| ModelError::JsonParseError(e))?;
+                .map_err(|e| ModelError::JsonParseError(e.to_string()))?;
             self.text = serde_json::to_string_pretty(&parsed).unwrap_or_default();
         }
         Ok(())
     }
 
     /// 转换为最终的 ContentBlock。
-    pub fn to_content_block(&self, id: MessageId) -> Option<ContentBlock> {
+    pub fn to_content_block(&self, id: harness_event::ToolCallId) -> Option<ContentBlock> {
         if !self.completed {
             return None;
         }
@@ -158,7 +158,7 @@ impl BlockPool {
     /// 获取所有完成的块。
     pub fn finish_blocks(&mut self) -> Vec<ContentBlock> {
         let mut result = Vec::new();
-        let id = MessageId(uuid::Uuid::new_v4());
+        let id = harness_event::ToolCallId(uuid::Uuid::new_v4());
         for block in self.blocks.values_mut() {
             if let Some(content) = block.to_content_block(id.clone()) {
                 result.push(content);

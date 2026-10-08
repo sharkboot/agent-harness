@@ -3,15 +3,17 @@
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
+use crate::error::McpError;
+
 /// MCP 消息类型
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "jsonrpc", rename_all = "2.0")]
+#[serde(tag = "type")]
 pub enum McpMessage {
-    #[serde(rename = "2.0")]
+    #[serde(rename = "request")]
     Request(McpRequest),
-    #[serde(rename = "2.0")]
+    #[serde(rename = "response")]
     Response(McpResponse),
-    #[serde(rename = "2.0")]
+    #[serde(rename = "notification")]
     Notification(McpNotification),
 }
 
@@ -51,22 +53,6 @@ pub trait McpServer: Send + Sync + 'static {
 
     /// 获取服务器版本信息
     fn version(&self) -> (&str, &str);
-}
-
-/// MCP Server 错误
-#[derive(Debug, thiserror::Error)]
-pub enum McpError {
-    #[error("Invalid request: {0}")]
-    InvalidRequest(String),
-
-    #[error("Method not found: {0}")]
-    MethodNotFound(String),
-
-    #[error("Invalid parameters: {0}")]
-    InvalidParams(String),
-
-    #[error("Internal error: {0}")]
-    Internal(String),
 }
 
 /// Mock MCP Server 实现

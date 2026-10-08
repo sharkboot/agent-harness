@@ -50,7 +50,6 @@ impl ApprovalGate for SilentApprovalGate {
 }
 
 /// 权限管理器
-#[derive(Debug)]
 pub struct PermissionManager {
     gates: Vec<Arc<dyn ApprovalGate>>,
 }
@@ -118,7 +117,7 @@ mod tests {
             std::sync::Arc::new(harness_tools::definitions::MockExecutor),
             ToolOutputDefinition {
                 schema: serde_json::json!({}),
-                render: std::sync::Arc::new(|_, _| vec![]),
+                render: std::sync::Arc::new(|_: &serde_json::Value, _: &serde_json::Value| vec![]),
                 presentation_meta: None,
             },
         );

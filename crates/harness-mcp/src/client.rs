@@ -1,8 +1,10 @@
 //! MCP Client 实现（简化版）
 
 use async_trait::async_trait;
-use harness_tools::ToolDefinition;
+use harness_tools::{ToolDefinition, ToolOutputDefinition};
 use tracing::info;
+
+use crate::error::McpError;
 
 /// MCP Client trait
 #[async_trait]
@@ -109,7 +111,7 @@ impl McpClient for MockMcpClient {
 
 /// 将 MCP 工具转换为 ToolDefinition
 pub fn mcp_tool_to_tool_definition(tool: &McpTool) -> ToolDefinition {
-    use harness_tools::{ToolOutputDefinition, definitions::ToolRenderFnTrait};
+    use harness_tools::ToolOutputDefinition;
     use std::sync::Arc;
 
     ToolDefinition::new(
@@ -121,7 +123,9 @@ pub fn mcp_tool_to_tool_definition(tool: &McpTool) -> ToolDefinition {
         }),
         ToolOutputDefinition {
             schema: serde_json::json!({}),
-            render: Arc::new(|_, _| vec![]),
+            render: Arc::new(|_: &serde_json::Value, _: &serde_json::Value| {
+                vec![]
+            }),
             presentation_meta: None,
         },
     )
@@ -132,13 +136,13 @@ struct McpToolExecutor {
     name: String,
 }
 
-#[async_trait::async_trait]
+#[async_trait]
 impl harness_tools::ToolExecutor for McpToolExecutor {
     async fn execute(
         &self,
         _args: &serde_json::Value,
-        _signal: &std::sync::Arc<tokio::sync::Mutex<Option<tokio::sync::Semaphore>>>>,
-    ) -> Result<serde_json::Value, harness_tools::ToolError> {
+        _signal: &std::sync::Arc<tokio::sync::Mutex<Option<tokio::sync::Semaphore>>>,
+    ) -> Result<serde_json::Value, harness_tools::definitions::ToolError> {
         Ok(serde_json::json!({
             "executor": self.name.clone(),
             "result": "executed"

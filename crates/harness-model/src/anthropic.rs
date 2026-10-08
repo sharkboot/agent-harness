@@ -164,7 +164,7 @@ impl ModelProvider for AnthropicProvider {
         &self,
         messages: &[Message],
         tools: &[ToolSchema],
-        signal: &Arc<Mutex<Option<tokio::sync::Semaphore>>>>,
+        signal: &Arc<Mutex<Option<tokio::sync::Semaphore>>>,
         temperature: Option<f64>,
         max_tokens: Option<usize>,
     ) -> Result<Vec<ContentBlock>, ModelError> {
@@ -199,7 +199,8 @@ impl ModelProvider for AnthropicProvider {
         }
 
         let stream = response.bytes_stream();
-        self.parse_stream(stream).await
+        self.parse_stream(stream.map(|b| b.map(|bytes| bytes.to_vec()).map_err(|e| e.into())))
+            .await
     }
 
     async fn chat_non_streaming(
@@ -235,7 +236,7 @@ impl ModelProvider for AnthropicProvider {
         let result: serde_json::Value = response
             .json()
             .await
-            .map_err(|e| ModelError::JsonParseError(e))?;
+            .map_err(|e| ModelError::JsonParseError(e.to_string()))?;
 
         let mut blocks = Vec::new();
         if let Some(content) = result.get("content").and_then(|c| c.as_array()) {

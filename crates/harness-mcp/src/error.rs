@@ -18,4 +18,13 @@ pub enum McpError {
 
     #[error("内部错误: {0}")]
     Internal(String),
+
+    #[error("Invalid request: {0}")]
+    InvalidRequest(String),
+
+    #[error("Method not found: {0}")]
+    MethodNotFound(String),
+
+    #[error("Invalid parameters: {0}")]
+    InvalidParams(String),
 }

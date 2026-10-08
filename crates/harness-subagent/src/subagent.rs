@@ -21,7 +21,7 @@ pub enum DelegationMode {
 }
 
 /// 子 Agent 状态
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SubAgentState {
     /// 待启动
     Pending,
@@ -118,8 +118,9 @@ impl SubAgentManager {
 
     /// 注册子 Agent
     pub fn register(&mut self, agent: SubAgentDefinition) {
+        let id = agent.id.clone();
         self.agents.push(agent);
-        self.states.insert(agent.id.clone(), SubAgentState::Pending);
+        self.states.insert(id, SubAgentState::Pending);
     }
 
     /// 启动子 Agent

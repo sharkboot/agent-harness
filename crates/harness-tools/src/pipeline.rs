@@ -43,6 +43,7 @@ pub struct ToolExecutionResult {
 /// 工具执行流水线。
 ///
 /// 负责将 tool_call 转化为 ToolResultMessage 并写入 session 日志。
+#[derive(Clone)]
 pub struct ToolPipeline {
     registry: ToolRegistry,
 }
@@ -164,7 +165,7 @@ impl ToolPipeline {
             vec![]
         } else {
             // 克隆 safe_calls 以避免生命周期问题
-            let safe_calls_owned: Vec<_> = safe_calls.iter().cloned().collect();
+            let safe_calls_owned: Vec<ToolCallBlock> = safe_calls.into_iter().cloned().collect();
             let handles: Vec<_> = safe_calls_owned
                 .into_iter()
                 .map(|tc| {

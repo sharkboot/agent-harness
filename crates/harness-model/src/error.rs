@@ -11,7 +11,7 @@ pub enum ModelError {
     ApiError { status: u16, message: String },
 
     #[error("JSON 解析失败: {0}")]
-    JsonParseError(#[from] serde_json::Error),
+    JsonParseError(String),
 
     #[error("流式响应错误: {0}")]
     StreamError(String),
