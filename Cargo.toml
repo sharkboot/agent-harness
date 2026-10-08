@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/harness-event", "crates/harness-session", "crates/harness-runtime"]
+members = ["crates/harness-event", "crates/harness-session", "crates/harness-runtime", "crates/harness-tools"]
 resolver = "2"
 
 [workspace.package]
