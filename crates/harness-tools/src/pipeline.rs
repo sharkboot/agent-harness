@@ -1,17 +1,15 @@
 //! 工具执行流水线
 //!
 //! 流程：
-//! ```
 //! 模型调用产出 tool_call
-//! → [审批门 human-in-the-loop]
-//! → foreach tool_call:
-//!    execute(args, signal) → canonical_value
-//!    → projectContent?() 可选替换
-//!    → finalizeContent?() 最终变换
-//!    → 写入 session 日志（ToolResultMessage）
-//!    → 派生 assistant message（含 tool_result）
-//!    → 检查 budget / 中断信号 → 继续或结束
-//! ```
+//! -> [审批门 human-in-the-loop]
+//! -> foreach tool_call:
+//!    execute(args, signal) -> canonical_value
+//!    -> projectContent?() 可选替换
+//!    -> finalizeContent?() 最终变换
+//!    -> 写入 session 日志（ToolResultMessage）
+//!    -> 派生 assistant message（含 tool_result）
+//!    -> 检查 budget / 中断信号 -> 继续或结束
 
 use std::sync::Arc;
 

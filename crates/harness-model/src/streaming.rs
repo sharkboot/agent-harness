@@ -1,17 +1,16 @@
 //! 流式输出映射管线
 //!
 //! 将 Provider SSE 事件流映射到统一的 ContentBlock：
-//! ```
+//!
 //! LLM API SSE
-//! ├─ message_start                → 初始化 BlockPool（按 index 预留块）
-//! ├─ content_block_start(index)   → 创建对应类型块，标记流式状态
-//! ├─ content_block_delta(index)   → 按 type 追加到对应块
-//! │     text_delta        → TextBlock.text += delta
-//! │     reasoning_delta   → ReasoningBlock.text += delta
-//! │     input_json_delta  → ToolCallBlock.arguments_json += delta
-//! ├─ content_block_stop(index)    → 标记完成（JSON 完整则 parse → INPUT_AVAILABLE）
-//! └─ message_stop                → 组装 AssistantMessage → 写入 session 日志
-//! ```
+//! message_start                -> 初始化 BlockPool（按 index 预留块）
+//! content_block_start(index)   -> 创建对应类型块，标记流式状态
+//! content_block_delta(index)   -> 按 type 追加到对应块
+//!   text_delta        -> TextBlock.text += delta
+//!   reasoning_delta   -> ReasoningBlock.text += delta
+//!   input_json_delta  -> ToolCallBlock.arguments_json += delta
+//! content_block_stop(index)    -> 标记完成（JSON 完整则 parse -> INPUT_AVAILABLE）
+//! message_stop                -> 组装 AssistantMessage -> 写入 session 日志
 
 use std::collections::HashMap;
 use tracing::{info, warn};
@@ -195,6 +194,7 @@ impl StreamingProcessor {
 
                         // 处理内容块
                         if let Some(text) = delta.get("content").and_then(|t| t.as_str()) {
+                            self.pool.add_block(idx, "text");
                             self.pool.append_text(idx, text);
                         }
 
@@ -215,6 +215,15 @@ impl StreamingProcessor {
                                             self.pool.append_arguments(tc_idx, args);
                                         }
                                     }
+                                }
+                            }
+                        }
+
+                        // 如果 finish_reason 是 "stop"，标记所有块完成
+                        if let Some(finish_reason) = choice.get("finish_reason").and_then(|f| f.as_str()) {
+                            if finish_reason == "stop" {
+                                for block in self.pool.blocks.values_mut() {
+                                    block.mark_completed();
                                 }
                             }
                         }
@@ -303,6 +312,14 @@ mod tests {
                 "delta": {"content": " World"}
             }]
         }));
+        // 最后标记完成
+        processor.process_openai_chunk(&serde_json::json!({
+            "choices": [{
+                "index": 0,
+                "delta": {},
+                "finish_reason": "stop"
+            }]
+        }));
 
         let blocks = processor.finish();
         assert_eq!(blocks.len(), 1);
@@ -356,6 +373,14 @@ mod tests {
                         "function": {"name": "read_file", "arguments": "{\"path\":\"/test\"}"}
                     }]
                 }
+            }]
+        }));
+        // 最后标记完成
+        processor.process_openai_chunk(&serde_json::json!({
+            "choices": [{
+                "index": 0,
+                "delta": {},
+                "finish_reason": "stop"
             }]
         }));
 
