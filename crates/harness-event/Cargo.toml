@@ -1,0 +1,13 @@
+[package]
+name = "harness-event"
+version.workspace = true
+edition.workspace = true
+description = "事件类型定义 + 序列化（ContentBlock / Message / SessionEvent）"
+
+[dependencies]
+serde       = { workspace = true }
+serde_json  = { workspace = true }
+thiserror   = { workspace = true }
+uuid        = { workspace = true }
+tracing     = { workspace = true }
+chrono      = { workspace = true }
