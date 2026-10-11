@@ -1,0 +1,14 @@
+{
+  "name": "agent-harness-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent Harness CLI - Interactive TUI and Headless mode",
+  "bin": {
+    "name": "harness",
+    "path": "src/main.rs"
+  },
+  "scripts": {
+    "dev": "cargo run",
+    "build": "cargo build --release"
+  }
+}

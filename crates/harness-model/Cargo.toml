@@ -1,0 +1,20 @@
+[package]
+name = "harness-model"
+version.workspace = true
+edition.workspace = true
+description = "Provider 适配器（OpenAI / Anthropic），流式输出映射到统一 ContentBlock"
+
+[dependencies]
+harness-event  = { workspace = true }
+serde          = { workspace = true }
+serde_json     = { workspace = true }
+thiserror      = { workspace = true }
+tracing        = { workspace = true }
+tokio          = { workspace = true }
+async-trait    = { workspace = true }
+futures        = { workspace = true }
+reqwest        = { workspace = true }
+uuid           = { workspace = true, features = ["v4"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

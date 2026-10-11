@@ -1,0 +1,15 @@
+{
+  "name": "agent-harness",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter @agent-harness/ui-components dev",
+    "build": "pnpm --filter @agent-harness/ui-components build",
+    "test": "pnpm --filter @agent-harness/ui-components test",
+    "lint": "pnpm --filter @agent-harness/ui-components lint"
+  }
+}

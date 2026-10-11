@@ -1,5 +1,24 @@
-# Archify 中间产物（交付 HTML/JSON 已归档到 docs/architecture/）
-.archify/
-# 本地临时
+# Rust build artifacts
+target/
+Cargo.lock
+
+# Node.js
+node_modules/
+dist/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
 *.log
+
+# Archify
+.archify/

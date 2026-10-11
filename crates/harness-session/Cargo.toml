@@ -1,0 +1,18 @@
+[package]
+name = "harness-session"
+version.workspace = true
+edition.workspace = true
+description = "Session 事件日志 + 持久化，消息历史从日志派生"
+
+[dependencies]
+harness-event = { workspace = true }
+serde         = { workspace = true }
+serde_json    = { workspace = true }
+thiserror     = { workspace = true }
+tracing       = { workspace = true }
+uuid          = { workspace = true, features = ["v4"] }
+tokio         = { workspace = true }
+chrono        = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

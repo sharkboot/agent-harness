@@ -1,0 +1,20 @@
+[package]
+name = "harness-runtime"
+version.workspace = true
+edition.workspace = true
+description = "Agent 主循环 + 轮次协调（ConversationCoordinator）"
+
+[dependencies]
+harness-event  = { workspace = true }
+harness-session = { workspace = true }
+serde          = { workspace = true }
+serde_json     = { workspace = true }
+thiserror      = { workspace = true }
+tracing        = { workspace = true }
+tokio          = { workspace = true }
+async-trait    = { workspace = true }
+uuid           = { workspace = true, features = ["v4"] }
+futures        = "0.3"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

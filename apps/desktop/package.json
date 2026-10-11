@@ -1,0 +1,19 @@
+{
+  "name": "@agent-harness/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent Harness Desktop (Tauri)",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.6.0",
+    "typescript": "^5.5.4"
+  }
+}
