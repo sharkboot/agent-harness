@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Agent Harness - Runtime Architecture",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [1178, 600],
+    "views": [
+      { "id": "entrances", "label": "接入层到适配层", "focus": ["web", "desktop", "tui", "cli", "acp", "sdk", "adapter-web", "adapter-tauri", "adapter-cli", "adapter-acp"], "note": "各入口通过对应 Adapter 共享同一 Runtime，适配层只做映射。" },
+      { "id": "runtime-core", "label": "Runtime 内核 + 运行时服务", "focus": ["coordinator", "session", "tool", "perm", "mcp", "model", "fs", "subagent"], "note": "单一行为实体：ConversationCoordinator 驱动主循环，各 Owner 各自掌管一类状态。" },
+      { "id": "plugin-host", "label": "受监督 Plugin Host", "focus": ["plugin1", "plugin2", "plugin3"], "note": "第三方 Plugin 运行在隔离子进程，经 IPC 与 Runtime 通信，有期限/取消/故障回收。" }
+    ]
+  },
+  "components": [
+    { "id": "web", "type": "frontend", "label": "Web UI", "sublabel": "Next.js", "pos": [40, 40], "size": [140, 56] },
+    { "id": "desktop", "type": "frontend", "label": "Desktop", "sublabel": "Tauri 2.x", "pos": [220, 40], "size": [140, 56] },
+    { "id": "tui", "type": "frontend", "label": "Interactive TUI", "sublabel": "Ink", "pos": [400, 40], "size": [140, 56] },
+    { "id": "cli", "type": "frontend", "label": "Headless CLI", "sublabel": "脚本 / CI", "pos": [580, 40], "size": [140, 56] },
+    { "id": "acp", "type": "external", "label": "ACP Server", "sublabel": "VSCode / Zed / JetBrains", "pos": [760, 40], "size": [150, 56] },
+    { "id": "sdk", "type": "external", "label": "Open SDK", "sublabel": "Python / TypeScript", "pos": [940, 40], "size": [150, 56] },
+
+    { "id": "adapter-web", "type": "backend", "label": "Web Adapter", "sublabel": "事件映射", "pos": [40, 150], "size": [140, 52] },
+    { "id": "adapter-tauri", "type": "backend", "label": "Tauri Adapter", "sublabel": "本地集成", "pos": [220, 150], "size": [140, 52] },
+    { "id": "adapter-cli", "type": "backend", "label": "CLI Adapter", "sublabel": "stdin/stdout", "pos": [400, 150], "size": [140, 52] },
+    { "id": "adapter-acp", "type": "backend", "label": "ACP Adapter", "sublabel": "编辑器协议", "pos": [580, 150], "size": [140, 52] },
+
+    { "id": "coordinator", "type": "backend", "label": "ConversationCoordinator", "sublabel": "轮次协调器", "pos": [320, 270], "size": [220, 60], "tag": "Agent Loop" },
+    { "id": "session", "type": "database", "label": "Session Owner", "sublabel": "事件日志 + 持久化", "pos": [40, 270], "size": [180, 60] },
+    { "id": "tool", "type": "backend", "label": "Tool Owner", "sublabel": "注册表 + 执行流水线", "pos": [600, 270], "size": [200, 60] },
+    { "id": "perm", "type": "security", "label": "Permission Owner", "sublabel": "策略引擎 + 审批门", "pos": [880, 270], "size": [200, 60] },
+    { "id": "mcp", "type": "messagebus", "label": "MCP Owner", "sublabel": "MCP 协议桥接", "pos": [40, 380], "size": [180, 60] },
+    { "id": "model", "type": "backend", "label": "Model Service", "sublabel": "OpenAI / Anthropic / DeepSeek / Grok", "pos": [380, 380], "size": [240, 60] },
+    { "id": "fs", "type": "backend", "label": "Filesystem / Shell", "sublabel": "FS + PTY 服务", "pos": [660, 380], "size": [180, 60] },
+    { "id": "subagent", "type": "backend", "label": "SubAgent Orchestration", "sublabel": "Fork / Pipeline / Delegation / Handoff", "pos": [880, 380], "size": [240, 60] },
+
+    { "id": "plugin1", "type": "security", "label": "Plugin 1", "sublabel": "WASM 子进程", "pos": [320, 510], "size": [140, 52] },
+    { "id": "plugin2", "type": "security", "label": "Plugin 2", "sublabel": "WASM 子进程", "pos": [520, 510], "size": [140, 52] },
+    { "id": "plugin3", "type": "security", "label": "Plugin N", "sublabel": "故障回收", "pos": [720, 510], "size": [140, 52] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Agent Runtime（Rust，单一行为实体）", "wraps": ["adapter-web", "adapter-tauri", "adapter-cli", "adapter-acp", "coordinator", "session", "tool", "perm", "mcp", "model", "fs", "subagent"], "pad": 18 },
+    { "kind": "security-group", "label": "Plugin Host（受监督隔离）", "wraps": ["plugin1", "plugin2", "plugin3"], "pad": 14 }
+  ],
+  "connections": [
+    { "id": "web-to-adapter", "from": "web", "to": "adapter-web", "fromSide": "bottom", "toSide": "top" },
+    { "id": "desktop-to-adapter", "from": "desktop", "to": "adapter-tauri", "fromSide": "bottom", "toSide": "top" },
+    { "id": "tui-to-adapter", "from": "tui", "to": "adapter-cli", "fromSide": "bottom", "toSide": "top" },
+    { "id": "cli-to-adapter", "from": "cli", "to": "adapter-cli", "fromSide": "bottom", "toSide": "top" },
+    { "id": "acp-to-adapter", "from": "acp", "to": "adapter-acp", "label": "ACP", "fromSide": "bottom", "toSide": "top" },
+
+    { "id": "adapter-web-to-coord", "from": "adapter-web", "to": "coordinator", "label": "事件", "fromSide": "bottom", "toSide": "top" },
+    { "id": "adapter-tauri-to-coord", "from": "adapter-tauri", "to": "coordinator", "fromSide": "bottom", "toSide": "top" },
+    { "id": "adapter-cli-to-coord", "from": "adapter-cli", "to": "coordinator", "fromSide": "bottom", "toSide": "top" },
+    { "id": "adapter-acp-to-coord", "from": "adapter-acp", "to": "coordinator", "fromSide": "bottom", "toSide": "top" },
+
+    { "id": "coord-to-session", "from": "coordinator", "to": "session", "label": "派生历史", "variant": "emphasis", "fromSide": "left", "toSide": "right" },
+    { "id": "coord-to-tool", "from": "coordinator", "to": "tool", "label": "tool_call", "variant": "emphasis", "fromSide": "right", "toSide": "left" },
+    { "id": "coord-to-mcp", "from": "coordinator", "to": "mcp", "fromSide": "bottom", "toSide": "top" },
+    { "id": "coord-to-model", "from": "coordinator", "to": "model", "label": "chat()", "fromSide": "bottom", "toSide": "top", "labelAt": [470, 344] },
+    { "id": "tool-to-perm", "from": "tool", "to": "perm", "label": "审批门", "fromSide": "right", "toSide": "left" },
+    { "id": "tool-to-fs", "from": "tool", "to": "fs", "label": "execute", "fromSide": "bottom", "toSide": "top", "labelAt": [660, 340] },
+    { "id": "tool-to-subagent", "from": "tool", "to": "subagent", "fromSide": "bottom", "toSide": "top" },
+
+    { "id": "model-to-plugin1", "from": "model", "to": "plugin1", "label": "IPC", "variant": "dashed", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "接入与 Runtime 内核", "items": ["Web / Desktop / TUI / CLI / ACP / SDK 六类入口共享同一 Runtime，适配层只做事件映射", "ConversationCoordinator 驱动主循环：调用模型 → 解析 → 路由工具 → 记录", "Session 是唯一真源：对话历史从仅追加事件日志派生，可重放", "统一 ContentBlock：reasoning / text / tool-call 类型化分离"] },
+    { "dot": "rose", "title": "安全边界", "items": ["三层权限：工具级 / 执行级 / 进程级", "审批门（human-in-the-loop）：高风险强制、中风险可配置、低风险免审", "Plugin Host 隔离：WASM 子进程 + 期限/取消/故障回收"] }
+  ]
+}

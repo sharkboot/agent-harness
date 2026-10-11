@@ -1,5 +1,24 @@
+# Rust build artifacts
 target/
 Cargo.lock
+
+# Node.js
 node_modules/
-.DS_Store
 dist/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archify
+.archify/

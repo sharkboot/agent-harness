@@ -21,10 +21,13 @@
 本仓库当前为项目规划阶段，包含：
 
 - 项目开发书（设计文档）
+- 架构图（交互式 HTML，含三个语义视图：接入层 / Runtime 内核 / Plugin Host）
 - 已拆解为 11 个跟踪 issue（见仓库 Issues，标签 `project-tracking`）
 - 后续将按 4 阶段里程碑（核心 Runtime → 渲染交互 → 高级能力 → 产品化）推进
 
 ## 相关资源
 
 - [项目书全文](agent-harness-项目开发书.md)
+- [架构图（交互式 HTML）](docs/architecture/agent-harness-architecture.html)
+- [架构图 spec（JSON）](docs/architecture/agent-harness.architecture.json)
 - [项目跟踪 issue](https://github.com/sharkboot/agent-harness/issues/1)
