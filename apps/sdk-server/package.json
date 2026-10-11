@@ -1,0 +1,17 @@
+{
+  "name": "@agent-harness/sdk-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SDK JSON-RPC Server",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@agent-harness/sdk-typescript": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
+  }
+}
