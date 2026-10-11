@@ -1,0 +1,22 @@
+[package]
+name = "agent-harness-desktop"
+version = "0.1.0"
+description = "Agent Harness Desktop (Tauri)"
+authors = ["sharkboot"]
+license = "MIT"
+edition = "2021"
+
+[build]
+rerun-if-changed = "src/main.rs"
+build = "src/build.rs"
+
+[dependencies]
+tauri = { version = "1.6", features = [] }
+
+[dev-dependencies]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
